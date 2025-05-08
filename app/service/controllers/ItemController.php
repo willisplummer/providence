@@ -306,7 +306,7 @@ class ItemController extends \GraphQLServices\GraphQLServiceController
 
 						$rels_by_target = [];
 						foreach ($targets as $t) {
-							$rels_by_target[] = \GraphQLServices\Helpers\Item\processTarget($rec, $table, $t, ['resolveRelativeToRelated' => $resolve_to_related]);
+							$rels_by_target[] = \GraphQLServices\Helpers\Item\processTarget($rec, $table, $t, ['resolveRelativeToRelated' => $resolve_to_related, 'checkAccess' => $check_access]);
 						}
 						return [
 							'table' => $rec->tableName(),

@@ -7,7 +7,7 @@
  * ----------------------------------------------------------------------
  *
  * Software by Whirl-i-Gig (http://www.whirl-i-gig.com)
- * Copyright 2023-2024 Whirl-i-Gig
+ * Copyright 2023-2025 Whirl-i-Gig
  *
  * For more information visit http://www.CollectiveAccess.org
  *
@@ -46,6 +46,8 @@ function processTarget(\BaseModel $rec, string $table, array $t, ?array $options
 	$include_media = $t['includeMedia'] ?? false;
 	$media_versions = $t['mediaVersions'] ?? ["thumbnail", "small", "medium", "large", "original"];
 	$media_bundles = $t['mediaBundles'] ?? null;
+
+	$check_access = $options['checkAccess'] ?? null;
 
 	$target_pk = \Datamodel::primaryKey($t['table']);
 	$rels = $rec->getRelatedItems($t['table'], ['checkAccess' => $check_access, 'primaryIDs' => [$rec->tableName() => [$rec->getPrimaryKey()]], 'restrictToTypes' => $t['restrictToTypes'], 'restrictToRelationshipTypes' => $t['restrictToRelationshipTypes']]);
@@ -278,7 +280,6 @@ function processItemRelationships(string $table, array $identifer, ?array $optio
 	// TODO: add explicit parameter for idno and id (to handle case where numeric idnos are used) 
 	$opts = [];
 	list($identifier, $opts) = \GraphQLServices\Helpers\resolveParams($args);
-	//	$rec = self::resolveIdentifier($table = $args['table'], $identifier, null, $opts);
 	$rec_pk = $rec->primaryKey();
 
 	$check_access = \GraphQLServices\Helpers\filterAccessValues($args['checkAccess']);
@@ -296,7 +297,8 @@ function processItemRelationships(string $table, array $identifer, ?array $optio
 			'limit' => $args['limit'] ?? null,
 			'includeMedia' => $args['includeMedia'] ?? null,
 			'mediaVersions' => $args['mediaVersions'] ?? null,
-			'restrictMediaToTypes' => $args['restrictMediaToTypes'] ?? null
+			'restrictMediaToTypes' => $args['restrictMediaToTypes'] ?? null,
+			'checkAccess' => $check_access
 		];
 	} else {
 		throw new \ServiceException(_t('No target specified'));
